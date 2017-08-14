@@ -1,3 +1,7 @@
+# Intro
+
+This project uses a Wii Balance Board to emulate a 2-axes joystick. It uses VPython for visualization.
+
 # Setup
 
 ## Dependencies
