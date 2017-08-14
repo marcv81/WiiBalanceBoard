@@ -1,6 +1,7 @@
 import array
 import struct
 import fcntl
+import select
 
 class Generic:
 
@@ -26,12 +27,13 @@ class Generic:
         return buffer[0]
 
     def update(self):
-        event = self.device.read(8)
-        e_time, e_value, e_type, e_number = struct.unpack('IhBB', event)
-        if e_type & self.JS_EVENT_BUTTON:
-            self.buttons[e_number] = e_value
-        if e_type & self.JS_EVENT_AXIS:
-            self.axes[e_number] = e_value
+        while self.device in select.select([self.device], [], [], 0)[0]:
+            event = self.device.read(8)
+            e_time, e_value, e_type, e_number = struct.unpack('IhBB', event)
+            if e_type & self.JS_EVENT_BUTTON:
+                self.buttons[e_number] = e_value
+            if e_type & self.JS_EVENT_AXIS:
+                self.axes[e_number] = e_value
 
 class BalanceBoard:
 
